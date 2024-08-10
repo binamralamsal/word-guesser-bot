@@ -33,7 +33,6 @@ bot.command("new", async (ctx) => {
     const chatId = ctx.chat.id;
     const randomWord =
       words[Math.floor(Math.random() * words.length)].toLowerCase();
-    console.log(randomWord);
 
     await db.insert(gamesTable).values({
       word: randomWord,

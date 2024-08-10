@@ -1,42 +1,41 @@
 import { relations, sql } from "drizzle-orm";
 import {
   integer,
-  pgTable,
-  serial,
   text,
-  timestamp,
   uniqueIndex,
-  varchar,
-} from "drizzle-orm/pg-core";
+  sqliteTable,
+} from "drizzle-orm/sqlite-core";
 
-export const gamesTable = pgTable(
+export const gamesTable = sqliteTable(
   "games",
   {
-    id: serial("id").primaryKey(),
-    word: varchar("word", { length: 5 }).notNull(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    word: text("word", { length: 5 }).notNull(),
     activeChat: text("active_chat").notNull().unique(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at")
+    createdAt: integer("created_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`CURRENT_TIMESTAMP`)
-      .$onUpdate(() => new Date()),
+      .default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
   },
   (table) => ({
-    activeChatIndex: uniqueIndex("chat_idx"),
+    activeChatIndex: uniqueIndex("chat_idx").on(table.activeChat),
   })
 );
 
-export const guessesTable = pgTable("guesses", {
-  id: serial("id").primaryKey(),
-  guess: varchar("guess", { length: 5 }).notNull(),
+export const guessesTable = sqliteTable("guesses", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  guess: text("guess", { length: 5 }).notNull(),
   gameId: integer("game_id")
     .notNull()
     .references(() => gamesTable.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
+  createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => new Date()),
+    .default(sql`(unixepoch())`),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
 });
 
 export const gamesRelations = relations(gamesTable, ({ many }) => ({
