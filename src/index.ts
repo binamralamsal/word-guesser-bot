@@ -38,7 +38,10 @@ bot.command("new", async (ctx) => {
     });
     ctx.reply("Game started! Guess the 5 letter word!");
   } catch (error) {
-    if (error instanceof SQLiteError && error.code === "2067") {
+    if (
+      error instanceof SQLiteError &&
+      error.code === "SQLITE_CONSTRAINT_UNIQUE"
+    ) {
       return ctx.reply(
         "There is already a game in progress in this chat. Use /end to end the current game."
       );
