@@ -98,6 +98,9 @@ bot.on("message", async (ctx) => {
     ctx.reply("Congrats! You guessed it correctly.\nStart with /new");
     ctx.react("🎉");
     await db.delete(gamesTable).where(eq(gamesTable.id, currentGame.id));
+    await db
+      .delete(guessesTable)
+      .where(eq(guessesTable.gameId, currentGame.id));
     return;
   }
 
@@ -112,6 +115,9 @@ bot.on("message", async (ctx) => {
 
   if (allGuesses.length === 30) {
     await db.delete(gamesTable).where(eq(gamesTable.id, currentGame.id));
+    await db
+      .delete(guessesTable)
+      .where(eq(guessesTable.gameId, currentGame.id));
     return ctx.reply(
       "Game Over! The word was " +
         currentGame.word +
