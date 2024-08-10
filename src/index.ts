@@ -63,6 +63,9 @@ bot.command("end", async (ctx) => {
     await db
       .delete(gamesTable)
       .where(eq(gamesTable.activeChat, String(ctx.chat.id)));
+    await db
+      .delete(guessesTable)
+      .where(eq(guessesTable.gameId, currentGame.id));
 
     ctx.reply(
       "Game Ended!\nCorrect word was " + currentGame.word + "\nStart with /new"
