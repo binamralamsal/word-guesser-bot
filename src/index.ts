@@ -53,11 +53,19 @@ bot.command("new", async (ctx) => {
 
 bot.command("end", async (ctx) => {
   try {
+    const currentGame = await db.query.gamesTable.findFirst({
+      where: eq(gamesTable.activeChat, String(ctx.chat.id)),
+    });
+
+    if (!currentGame) return ctx.reply("There is no game in progress.");
+
     await db
       .delete(gamesTable)
       .where(eq(gamesTable.activeChat, String(ctx.chat.id)));
 
-    ctx.reply("Game Ended!\nStart with /new");
+    ctx.reply(
+      "Game Ended!\nCorrect word was " + currentGame.word + "\nStart with /new"
+    );
   } catch (err) {
     console.error(err);
     return ctx.reply("Something went wrong. Please try again.");
