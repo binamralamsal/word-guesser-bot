@@ -1,0 +1,30 @@
+{
+  "name": "word-guesser-bot",
+  "module": "index.ts",
+  "type": "module",
+  "imports": {
+    "#*": [
+      "./src/*.ts"
+    ]
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts",
+    "generate": "drizzle-kit generate",
+    "migrate": "bun run src/drizzle/migrate.ts",
+    "studio": "bunx drizzle-kit studio"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.24.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.33.0",
+    "grammy": "^1.28.0",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
+  }
+}
