@@ -3,10 +3,8 @@ import { env } from "./env";
 import words from "./words.json";
 import { db } from "#drizzle/db";
 import { gamesTable, guessesTable } from "#drizzle/schema";
-import postgres from "postgres";
 import { eq } from "drizzle-orm";
-
-const { PostgresError } = postgres;
+import { SQLiteError } from "bun:sqlite";
 
 const bot = new Bot(env.BOT_TOKEN);
 
@@ -40,7 +38,7 @@ bot.command("new", async (ctx) => {
     });
     ctx.reply("Game started! Guess the 5 letter word!");
   } catch (error) {
-    if (error instanceof PostgresError && error.code === "23505") {
+    if (error instanceof SQLiteError && error.code === "2067") {
       return ctx.reply(
         "There is already a game in progress in this chat. Use /end to end the current game."
       );
