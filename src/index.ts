@@ -1,6 +1,7 @@
 import { Bot } from "grammy";
 import { env } from "./env";
-import words from "./words.json";
+import allWords from "./allWords.json";
+import commonWords from "./commonWords.json";
 import { db } from "#drizzle/db";
 import { gamesTable, guessesTable } from "#drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -30,7 +31,7 @@ bot.command("new", async (ctx) => {
   try {
     const chatId = ctx.chat.id;
     const randomWord =
-      words[Math.floor(Math.random() * words.length)].toLowerCase();
+      commonWords[Math.floor(Math.random() * commonWords.length)].toLowerCase();
 
     await db.insert(gamesTable).values({
       word: randomWord,
@@ -86,7 +87,7 @@ bot.on("message", async (ctx) => {
 
   if (!currentGame) return;
 
-  if (!words.includes(currentGuess))
+  if (!allWords.includes(currentGuess) && !commonWords.includes(currentGuess))
     return ctx.reply(`${currentGuess} is not a valid word.`);
 
   const guessExists = await db.query.guessesTable.findFirst({
