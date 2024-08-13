@@ -100,7 +100,9 @@ bot.on("message", async (ctx) => {
     );
 
   if (currentGuess === currentGame.word) {
-    ctx.reply("Congrats! You guessed it correctly.\nStart with /new");
+    ctx.reply("Congrats! You guessed it correctly.\nStart with /new", {
+      reply_parameters: { message_id: ctx.message.message_id },
+    });
     ctx.react("🎉");
     await db.delete(gamesTable).where(eq(gamesTable.id, currentGame.id));
     await db
@@ -147,6 +149,7 @@ await bot.api.setMyCommands([
 
 bot.start({
   onStart: () => console.log("Bot started"),
+  drop_pending_updates: true,
 });
 
 interface GuessEntry {
